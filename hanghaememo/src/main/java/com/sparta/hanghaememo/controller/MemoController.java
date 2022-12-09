@@ -35,4 +35,9 @@ public class MemoController {
         return memoService.update(id, requestDto);
     }
 
+    @DeleteMapping("/api/memos/{id}")
+    public Long deleteMemo (@PathVariable Long id) {
+        return memoService.deleteMemo(id);
+    }
+
 }
