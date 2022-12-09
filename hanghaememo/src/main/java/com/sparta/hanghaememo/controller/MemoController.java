@@ -12,5 +12,12 @@ public class MemoController {
     @GetMapping("/")
     public ModelAndView home() {
         return new ModelAndView("index");
+
     }
+
+    @PostMapping("/api/memos")
+    public Memo createMemo (@RequestBody MemoRequestDto requestDto) {
+
+    }
+
 }
