@@ -1,5 +1,6 @@
 package com.sparta.hanghaememo.entity;
 
+import com.sparta.hanghaememo.dto.MemoRequestDto;
 import jakarta.persistence.Entity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,4 +20,9 @@ public class Memo extends Timestamped {
 
     @Column(nullable = false)
     private String contents;
+
+    public Memo(MemoRequestDto requestDto) {
+        this.username = requestDto.getUsername();
+        this.contents = requestDto.getContents();
+    }
 }
