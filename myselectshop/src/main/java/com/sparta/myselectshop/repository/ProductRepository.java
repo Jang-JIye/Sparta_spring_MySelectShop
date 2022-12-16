@@ -1,27 +1,29 @@
-package com.sparta.myselectshop.controller;
+package com.sparta.myselectshop.repository;
 
 import com.sparta.myselectshop.dto.ProductMypriceRequestDto;
-import com.sparta.myselectshop.dto.ProductRequestDto;
 import com.sparta.myselectshop.dto.ProductResponseDto;
 import com.sparta.myselectshop.entity.Product;
-import org.springframework.web.bind.annotation.*;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-@RestController
-@RequestMapping("/api")
-public class AllInOneController {
+public class ProductRepository{
 
-    // 관심 상품 등록하기
-    @PostMapping("/products")
-    public ProductResponseDto createProduct(@RequestBody ProductRequestDto requestDto) throws SQLException {
-        // 요청받은 DTO 로 DB에 저장할 객체 만들기
-        Product product = new Product(requestDto);
+    private final String dbUrl;
+    private final String username;
+    private final String password;
+
+    public ProductRepository(String dbUrl, String username, String password) {
+        this.dbUrl = dbUrl;
+        this.username = username;
+        this.password = password;
+    }
+
+    public ProductResponseDto createProduct(Product product) throws SQLException {
 
         // DB 연결
-        Connection connection = DriverManager.getConnection("jdbc:h2:mem:db", "sa", "");
+        Connection connection = getConnection();
 
         // DB Query 작성
         PreparedStatement ps = connection.prepareStatement("select max(id) as id from product");
@@ -48,17 +50,15 @@ public class AllInOneController {
         ps.close();
         connection.close();
 
-        // 응답 보내기
+
         return new ProductResponseDto(product);
     }
 
-    // 관심 상품 조회하기
-    @GetMapping("/products")
     public List<ProductResponseDto> getProducts() throws SQLException {
         List<ProductResponseDto> products = new ArrayList<>();
 
         // DB 연결
-        Connection connection = DriverManager.getConnection("jdbc:h2:mem:db", "sa", "");
+        Connection connection = getConnection();
 
         // DB Query 작성 및 실행
         Statement stmt = connection.createStatement();
@@ -80,16 +80,34 @@ public class AllInOneController {
         rs.close();
         connection.close();
 
-        // 응답 보내기
         return products;
     }
 
-    // 관심 상품 최저가 등록하기
-    @PutMapping("/products/{id}")
-    public Long updateProduct(@PathVariable Long id, @RequestBody ProductMypriceRequestDto requestDto) throws SQLException {
-        Product product = new Product();
+    public Long updateProduct(Long id, ProductMypriceRequestDto requestDto) throws SQLException {
+
         // DB 연결
-        Connection connection = DriverManager.getConnection("jdbc:h2:mem:db", "sa", "");
+        Connection connection = getConnection();
+
+        // DB Query 작성
+        PreparedStatement ps = connection.prepareStatement("update product set myprice = ? where id = ?");
+        ps.setInt(1, requestDto.getMyprice());
+        ps.setLong(2, id);
+
+        // DB Query 실행
+        ps.executeUpdate();
+
+        // DB 연결 해제
+        ps.close();
+        connection.close();
+
+        return null;
+    }
+
+    public Product getProduct(Long id) throws SQLException {
+        Product product = new Product();
+
+        // DB 연결
+        Connection connection = getConnection();
 
         // DB Query 작성
         PreparedStatement ps = connection.prepareStatement("select * from product where id = ?");
@@ -104,25 +122,18 @@ public class AllInOneController {
             product.setLprice(rs.getInt("lprice"));
             product.setMyprice(rs.getInt("myprice"));
             product.setTitle(rs.getString("title"));
-        } else {
-            throw new NullPointerException("해당 아이디가 존재하지 않습니다.");
         }
-
-        // DB Query 작성
-        ps = connection.prepareStatement("update product set myprice = ? where id = ?");
-        ps.setInt(1, requestDto.getMyprice());
-        ps.setLong(2, product.getId());
-
-        // DB Query 실행
-        ps.executeUpdate();
 
         // DB 연결 해제
         rs.close();
         ps.close();
         connection.close();
 
-        // 응답 보내기 (업데이트된 상품 id)
-        return product.getId();
+        return product;
+    }
+
+    public Connection getConnection() throws SQLException {
+        return DriverManager.getConnection(dbUrl, username, password);
     }
 
 }
