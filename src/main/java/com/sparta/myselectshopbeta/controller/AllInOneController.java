@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api")//모든 url은 api로 받는다.
 public class AllInOneController {
 
     // 관심 상품 등록하기

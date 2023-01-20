@@ -25,7 +25,7 @@ public class NaverApiService {
         HttpEntity<String> requestEntity = new HttpEntity<String>(body, headers);
         ResponseEntity<String> responseEntity = rest.exchange("https://openapi.naver.com/v1/search/shop.json?display=15&query=" + query , HttpMethod.GET, requestEntity, String.class);
 
-        HttpStatus httpStatus = (HttpStatus) responseEntity.getStatusCode();
+        HttpStatus httpStatus = responseEntity.getStatusCode();
         int status = httpStatus.value();
         log.info("NAVER API Status Code : " + status);
 
