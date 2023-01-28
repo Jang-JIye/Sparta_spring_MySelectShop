@@ -4,7 +4,6 @@ import com.sparta.myselectshopbeta.dto.ProductMypriceRequestDto;
 import com.sparta.myselectshopbeta.dto.ProductRequestDto;
 import com.sparta.myselectshopbeta.dto.ProductResponseDto;
 import com.sparta.myselectshopbeta.entity.Product;
-import com.sparta.myselectshopbeta.naver.dto.ItemDto;
 import com.sparta.myselectshopbeta.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -52,11 +51,4 @@ public class ProductService {
         return product.getId();
     }
 
-    @Transactional
-    public void updateBySearch(Long id, ItemDto itemDto) {
-        Product product = productRepository.findById(id).orElseThrow(
-                () -> new NullPointerException("해당 상품은 존재하지 않습니다.")
-        );
-        product.updateByItemDto(itemDto);
-    }
 }
