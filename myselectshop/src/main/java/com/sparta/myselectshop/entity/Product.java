@@ -1,8 +1,8 @@
 package com.sparta.myselectshop.entity;
 
 import com.sparta.myselectshop.dto.*;
+import com.sparta.myselectshop.naver.dto.ItemDto;
 import jakarta.persistence.*;
-import com.sparta.myselectshop.naver.dto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -13,7 +13,7 @@ import lombok.Setter;
 @Setter
 @Entity // DB 테이블 역할을 합니다.
 @NoArgsConstructor
-public class Product extends Timestamped{
+public class Product extends Timestamped {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY) // ID가 자동으로 생성 및 증가합니다.
