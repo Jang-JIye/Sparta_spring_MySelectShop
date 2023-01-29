@@ -3,11 +3,10 @@ package com.sparta.myselectshop.controller;
 import com.sparta.myselectshop.dto.LoginRequestDto;
 import com.sparta.myselectshop.dto.SignupRequestDto;
 import com.sparta.myselectshop.service.UserService;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 @Controller
@@ -38,5 +37,10 @@ public class UserController {
         userService.login(loginRequestDto);
         return "redirect:/api/shop";
     }
-
+    @ResponseBody
+    @PostMapping("/login")
+    public String login(@RequestBody LoginRequestDto loginRequestDto, HttpServletResponse response) {
+        userService.login(loginRequestDto, response);
+        return "success";
+    }
 }
