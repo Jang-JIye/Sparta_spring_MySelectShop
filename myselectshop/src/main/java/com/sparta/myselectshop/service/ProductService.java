@@ -1,11 +1,10 @@
 package com.sparta.myselectshop.service;
 
 import com.sparta.myselectshop.dto.*;
-import com.sparta.myselectshop.entity.Product;
-import com.sparta.myselectshop.entity.User;
-import com.sparta.myselectshop.entity.UserRoleEnum;
+import com.sparta.myselectshop.entity.*;
 import com.sparta.myselectshop.jwt.JwtUtil;
 
+import com.sparta.myselectshop.naver.dto.ItemDto;
 import com.sparta.myselectshop.repository.ProductRepository;
 import com.sparta.myselectshop.repository.UserRepository;
 import io.jsonwebtoken.Claims;
