@@ -27,6 +27,13 @@ public class FolderController {
 
         return folderService.addFolders(folderNames, request);
     }
+    // 회원이 등록한 모든 폴더 조회
+    @GetMapping("/folders")
+    public List<Folder> getFolders(
+            HttpServletRequest request
+    ) {
+        return folderService.getFolders(request);
+    }
 
 
 }
