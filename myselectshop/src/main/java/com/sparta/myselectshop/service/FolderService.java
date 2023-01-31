@@ -130,4 +130,14 @@ public class FolderService {
             return null;
         }
     }
+
+    private boolean isExistFolderName(String folderName, List<Folder> existFolderList) {
+        //기존 폴더 리스트에서 folder name 이 있는지?
+        for (Folder existFolder : existFolderList) {
+            if (existFolder.getName().equals(folderName)) {
+                return true;
+            }
+        }
+        return false;
+    }
 }
