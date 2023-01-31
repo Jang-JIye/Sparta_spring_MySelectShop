@@ -10,12 +10,12 @@ import com.sparta.myselectshop.repository.UserRepository;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -55,7 +55,12 @@ public class ProductService {
     }
 
     @Transactional(readOnly = true)
-    public List<ProductResponseDto> getProducts(HttpServletRequest request) {
+    public Page<Product> getProducts(HttpServletRequest request, int page, int size, String sortBy, boolean isAsc) {
+        // 페이징 처리
+        Sort.Direction direction = isAsc ? Sort.Direction.ASC : Sort.Direction.DESC;
+        Sort sort = Sort.by(direction, sortBy);
+        Pageable pageable = PageRequest.of(page, size, sort);
+
         // Request에서 Token 가져오기
         String token = jwtUtil.resolveToken(request);
         Claims claims;
@@ -79,21 +84,16 @@ public class ProductService {
             UserRoleEnum userRoleEnum = user.getRole();
             System.out.println("role = " + userRoleEnum);
 
-            List<ProductResponseDto> list = new ArrayList<>();
-            List<Product> productList;
+            Page<Product> products;
 
             if (userRoleEnum == UserRoleEnum.USER) {
                 // 사용자 권한이 USER일 경우
-                productList = productRepository.findAllByUserId(user.getId());
+                products = productRepository.findAllByUserId(user.getId(), pageable);
             } else {
-                productList = productRepository.findAll();
+                products = productRepository.findAll(pageable);
             }
 
-            for (Product product : productList) {
-                list.add(new ProductResponseDto(product));
-            }
-
-            return list;
+            return products;
 
         } else {
             return null;
